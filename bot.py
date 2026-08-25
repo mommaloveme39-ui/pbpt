@@ -26,8 +26,11 @@ if not BOT_TOKEN:
 # Clean up username formatting automatically
 EXPERT_USERNAME = EXPERT_USERNAME.replace("@", "").strip()
 
-# Opens direct DM in-app for all users without web confirmation pop-ups
+# Direct in-app Telegram deep link
 EXPERT_LINK = f"tg://resolve?domain={EXPERT_USERNAME}"
+
+# Local image file path stored in your GitHub repository
+PROOF_IMAGE_PATH = "proof.jpg"
 
 
 # =========================================================
@@ -64,6 +67,12 @@ def main_keyboard():
             InlineKeyboardButton(
                 "❓ Common Ad Problems",
                 callback_data="problems"
+            )
+        ],
+        [
+            InlineKeyboardButton(
+                "📸 Past Fixes & Proof",
+                callback_data="proof"
             )
         ],
         [
@@ -181,7 +190,7 @@ async def button_handler(
             "problematic Telegram Ads.\n\n"
             "👇 Choose an option:"
         )
-        await query.edit_message_text(
+        await query.message.reply_text(
             message,
             reply_markup=main_keyboard()
         )
@@ -230,6 +239,29 @@ async def button_handler(
             message,
             reply_markup=back_keyboard()
         )
+
+    elif action == "proof":
+        caption = (
+            "📸 **Recent Ad Approval Case Study**\n\n"
+            "• **Problem:** Destination declined due to policy/compliance checks.\n"
+            "• **Solution:** Re-structured bot menu flow and fixed compliance copy.\n"
+            "• **Result:** Approved on first resubmission.\n\n"
+            "👇 Ready to fix your rejected ad?"
+        )
+        
+        if os.path.exists(PROOF_IMAGE_PATH):
+            with open(PROOF_IMAGE_PATH, "rb") as photo_file:
+                await query.message.reply_photo(
+                    photo=photo_file,
+                    caption=caption,
+                    parse_mode="Markdown",
+                    reply_markup=back_keyboard()
+                )
+        else:
+            await query.message.reply_text(
+                "⚠️ Proof image file was not found on the server.",
+                reply_markup=back_keyboard()
+            )
 
     elif action == "rejected":
         message = (
