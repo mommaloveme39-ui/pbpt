@@ -26,8 +26,7 @@ if not BOT_TOKEN:
 # Remove @ if the user accidentally includes it
 EXPERT_USERNAME = EXPERT_USERNAME.replace("@", "")
 
-EXPERT_LINK = f"https://t.me/{EXPERT_USERNAME}"
-
+EXPERT_LINK = "tg://user?id=8026609110"
 
 # =========================================================
 # LOGGING
